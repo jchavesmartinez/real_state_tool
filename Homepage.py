@@ -67,18 +67,25 @@ else:
     if filter_cols:
         st.markdown("### 🔎 Filtros dinámicos")
 
-        # Creamos una copia para los filtros (opcional, por seguridad)
         df_for_filters = df_listings.copy()
+
+        # ---- NORMALIZAR TODAS LAS COLUMNAS OBJETO ----
+        for col in df_for_filters.columns:
+            if df_for_filters[col].dtype == "object":
+                df_for_filters[col] = (
+                    df_for_filters[col]
+                    .astype(str)
+                    .replace("nan", "")
+                    .replace("None", "")
+                )
 
         filters = DynamicFilters(
             df_for_filters,
             filters=filter_cols
         )
 
-        # Muestra los filtros en la UI
         filters.display_filters()
 
-        # DataFrame filtrado
         df_filtered = filters.filter_df()
 
         st.write(f"Filas después de filtrar: {len(df_filtered)}")
