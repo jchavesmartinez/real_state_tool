@@ -31,6 +31,7 @@ st.set_page_config(
     layout="wide",
 )
 
+
 # ---------------------------- Variables generales --------------------------------
 # (aquí puedes ir poniendo tus variables globales si ya las tenías)
 
