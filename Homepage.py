@@ -25,8 +25,8 @@ import json
 
 #st.cache_data.clear()
 st.set_page_config(
-  page_title="Lilliput Inventory Management",
-  page_icon="🔬",
+  page_title="506RealState",
+  page_icon="🏠",
   layout="wide",
 )
 
