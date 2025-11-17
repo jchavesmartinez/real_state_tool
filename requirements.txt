@@ -1,0 +1,8 @@
+streamlit
+python-barcode
+Pillow
+google-auth
+google-api-python-client
+google-auth-httplib2
+streamlit_dynamic_filters
+reportlab
