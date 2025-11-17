@@ -109,20 +109,38 @@ else:
 
     st.markdown("### 🎛 Filtros por amenities (0/1)")
 
+    binary_cols = []
+    for col in df_filtered.columns:
+        vals = set(df_filtered[col].dropna().unique())
+        if vals.issubset({0, 1}) and len(vals) > 0:
+            binary_cols.append(col)
+
+    # Ordenar alfabéticamente
+    binary_cols = sorted(binary_cols)
+
+    st.markdown("### 🎛 Filtros por amenities (0/1)")
+
+    amenity_choices = {}
+
     if binary_cols:
         with st.expander("Mostrar filtros de amenities (0/1)", expanded=False):
-            amenity_choices = {}
-            for col in binary_cols:
-                # Radio por columna: Indiferente / Sí / No
-                choice = st.radio(
-                    label=col,
-                    options=["Indiferente", "Sí", "No"],
-                    horizontal=True,
-                    key=f"amen_{col}"
-                )
-                amenity_choices[col] = choice
+            n_cols = 3  # número de columnas que quieres en la cuadrícula
+
+            # Recorremos las columnas binarias en bloques de n_cols
+            for start in range(0, len(binary_cols), n_cols):
+                cols = st.columns(n_cols)
+                slice_cols = binary_cols[start:start + n_cols]
+
+                for idx, col_name in enumerate(slice_cols):
+                    with cols[idx]:
+                        choice = st.radio(
+                            label=col_name,
+                            options=["Indiferente", "Sí", "No"],
+                            horizontal=True,
+                            key=f"amen_{col_name}"
+                        )
+                        amenity_choices[col_name] = choice
     else:
-        amenity_choices = {}
         st.info("No se encontraron columnas binarias (0/1) para filtrar.")
 
     # Aplicar filtros de radios SOBRE el resultado de DynamicFilters
