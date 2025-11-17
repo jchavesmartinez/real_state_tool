@@ -52,8 +52,7 @@ st.title("🏠 506RealState - Explorador de propiedades")
 if df_listings.empty:
     st.warning("No se pudieron cargar los datos de propiedades.")
 else:
-    st.subheader("Tabla de propiedades (merged_contacts_listings_flat.csv)")
-    st.write(f"Filas totales (sin filtrar): {len(df_listings)} | Columnas: {len(df_listings.columns)}")
+    st.subheader("Tabla de propiedades")
 
     # --------- Filtros dinámicos con DynamicFilters ---------
     candidate_filters = [
@@ -71,10 +70,8 @@ else:
     if filter_cols:
         st.markdown("### 🔎 Filtros dinámicos")
 
-        # Copia limpia para filtros
         df_for_filters = df_listings.copy()
 
-        # Normalizar columnas tipo object para que DynamicFilters no se rompa
         for col in df_for_filters.columns:
             if df_for_filters[col].dtype == "object":
                 df_for_filters[col] = (
@@ -89,9 +86,13 @@ else:
             filters=filter_cols
         )
 
-        filters.display_filters()
+        # 🔹 Aquí los pones en 2 columnas
+        filters.display_filters(
+            location="columns",
+            num_columns=2,
+            gap="small"
+        )
 
-        # DataFrame filtrado por DynamicFilters
         df_filtered = filters.filter_df()
     else:
         df_filtered = df_listings.copy()
