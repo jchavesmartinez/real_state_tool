@@ -60,6 +60,7 @@ else:
     candidate_filters = [
         "Categoria",
         "Localización",
+        "Operación",
         "contact_name"
     ]
     filter_cols = [c for c in candidate_filters if c in df_listings.columns]
