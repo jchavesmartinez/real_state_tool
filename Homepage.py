@@ -118,8 +118,6 @@ else:
     # Ordenar alfabéticamente
     binary_cols = sorted(binary_cols)
 
-    st.markdown("### 🎛 Filtros por amenities (0/1)")
-
     amenity_choices = {}
 
     if binary_cols:
