@@ -56,11 +56,14 @@ else:
     st.write(f"Filas totales (sin filtrar): {len(df_listings)} | Columnas: {len(df_listings.columns)}")
 
     # --------- Filtros dinámicos con DynamicFilters ---------
-    # Seleccionamos solo columnas que EXISTEN en el CSV
     candidate_filters = [
         "Categoria",
         "Localización",
-        "Operación",
+        "Precio",
+        "Recámaras",
+        "Baños",
+        "Parking",
+        "Año de construcción",
         "contact_name"
     ]
     filter_cols = [c for c in candidate_filters if c in df_listings.columns]
@@ -68,9 +71,10 @@ else:
     if filter_cols:
         st.markdown("### 🔎 Filtros dinámicos")
 
+        # Copia limpia para filtros
         df_for_filters = df_listings.copy()
 
-        # ---- NORMALIZAR TODAS LAS COLUMNAS OBJETO ----
+        # Normalizar columnas tipo object para que DynamicFilters no se rompa
         for col in df_for_filters.columns:
             if df_for_filters[col].dtype == "object":
                 df_for_filters[col] = (
@@ -87,10 +91,49 @@ else:
 
         filters.display_filters()
 
+        # DataFrame filtrado por DynamicFilters
         df_filtered = filters.filter_df()
-
-        st.write(f"Filas después de filtrar: {len(df_filtered)}")
-        st.dataframe(df_filtered, use_container_width=True)
     else:
-        st.info("No se encontraron columnas adecuadas para filtros dinámicos, mostrando tabla completa.")
-        st.dataframe(df_listings, use_container_width=True)
+        df_filtered = df_listings.copy()
+
+    # --------- Filtros por columnas 0/1 (amenities, etc.) con radios ---------
+    # Detectar columnas binarias (solo 0 y 1, ignorando NaN)
+    binary_cols = []
+    for col in df_filtered.columns:
+        vals = set(df_filtered[col].dropna().unique())
+        if vals.issubset({0, 1}) and len(vals) > 0:
+            binary_cols.append(col)
+
+    # Opcional: ordenar alfabéticamente o escoger sólo algunas
+    binary_cols = sorted(binary_cols)
+
+    st.markdown("### 🎛 Filtros por amenities (0/1)")
+
+    if binary_cols:
+        with st.expander("Mostrar filtros de amenities (0/1)", expanded=False):
+            amenity_choices = {}
+            for col in binary_cols:
+                # Radio por columna: Indiferente / Sí / No
+                choice = st.radio(
+                    label=col,
+                    options=["Indiferente", "Sí", "No"],
+                    horizontal=True,
+                    key=f"amen_{col}"
+                )
+                amenity_choices[col] = choice
+    else:
+        amenity_choices = {}
+        st.info("No se encontraron columnas binarias (0/1) para filtrar.")
+
+    # Aplicar filtros de radios SOBRE el resultado de DynamicFilters
+    df_final = df_filtered.copy()
+
+    for col, choice in amenity_choices.items():
+        if choice == "Sí":
+            df_final = df_final[df_final[col] == 1]
+        elif choice == "No":
+            df_final = df_final[df_final[col] == 0]
+        # "Indiferente" → no se filtra por esa columna
+
+    st.write(f"Filas después de filtrar: {len(df_final)}")
+    st.dataframe(df_final, use_container_width=True)
