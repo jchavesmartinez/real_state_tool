@@ -18,34 +18,64 @@ import io
 
 import streamlit.components.v1 as components
 import base64
-import json
+import json as json_lib  # para evitar conflicto de nombre si quieres
 
-#st.cache_data.clear()
+# ------------------------------------------------------------------------------
+# Configuración general de la página
+# ------------------------------------------------------------------------------
+
+# st.cache_data.clear()
 st.set_page_config(
-  page_title="506RealState",
-  page_icon="🏠",
-  layout="wide",
+    page_title="506RealState",
+    page_icon="🏠",
+    layout="wide",
 )
 
-# ---------------------------- Cargar CSV desde GitHub ----------------------------
+# ---------------------------- Variables generales --------------------------------
+# (aquí puedes ir poniendo tus variables globales si ya las tenías)
+
+# ------------------------------------------------------------------------------
+# Cargar CSV desde GitHub con cache
+# ------------------------------------------------------------------------------
 
 CSV_URL = "https://raw.githubusercontent.com/jchavesmartinez/real_state_tool/refs/heads/main/merged_contacts_listings_flat.csv"
 
-@st.cache_data
+@st.cache_data(show_spinner=True)
 def load_listings_data() -> pd.DataFrame:
-    df = pd.read_csv(CSV_URL)
-    return df
+    try:
+        df = pd.read_csv(CSV_URL)
+        return df
+    except Exception as e:
+        st.error(f"❌ Error cargando el CSV desde GitHub: {e}")
+        return pd.DataFrame()  # evita que falle toda la app
 
 df_listings = load_listings_data()
 
-# (Opcional) guardar en session_state por si lo usas en otras páginas
-st.session_state["df_listings"] = df_listings
+# Guardar en session_state por si lo usas en otras secciones/páginas
+if "df_listings" not in st.session_state:
+    st.session_state["df_listings"] = df_listings
 
-# ---------------------------- UI básica para ver la tabla ----------------------------
+# ------------------------------------------------------------------------------
+# UI principal
+# ------------------------------------------------------------------------------
 
 st.title("🏠 506RealState - Explorador de propiedades")
 
-st.subheader("Tabla de propiedades (merged_contacts_listings_flat.csv)")
-st.write(f"Filas: {len(df_listings)} | Columnas: {len(df_listings.columns)}")
+if df_listings.empty:
+    st.warning("No se pudieron cargar los datos de propiedades.")
+else:
+    st.subheader("Tabla de propiedades (merged_contacts_listings_flat.csv)")
+    st.write(f"Filas: {len(df_listings)} | Columnas: {len(df_listings.columns)}")
 
-st.dataframe(df_listings, use_container_width=True)
+    st.dataframe(df_listings, use_container_width=True)
+
+    # Ejemplo: podrías empezar a jugar con filtros dinámicos después
+    # filters = DynamicFilters(df_listings, filters=['Categoria', 'Localización'])
+    # filters.display_filters()
+    # filtered_df = filters.filter_df()
+    # st.dataframe(filtered_df, use_container_width=True)
+
+# ------------------------------------------------------------------------------
+# A partir de aquí puedes seguir con el resto de tu lógica (códigos previos)
+# por ejemplo: generación de PDFs, códigos de barras, integración con Google Drive, etc.
+# ------------------------------------------------------------------------------
