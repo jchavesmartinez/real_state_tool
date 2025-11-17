@@ -1,44 +1,3 @@
-import streamlit as st
-from googleapiclient.discovery import build
-from google.oauth2 import service_account
-from googleapiclient.http import MediaIoBaseUpload
-from io import BytesIO
-import json
-import pandas as pd
-import re
-import numpy as np
-from streamlit_dynamic_filters import DynamicFilters
-from barcode import EAN13
-from barcode.writer import ImageWriter
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
-from PIL import Image
-import time
-import io
-
-import streamlit.components.v1 as components
-import base64
-import json as json_lib  # para evitar conflicto de nombre si quieres
-
-# ------------------------------------------------------------------------------
-# Configuración general de la página
-# ------------------------------------------------------------------------------
-
-# st.cache_data.clear()
-st.set_page_config(
-    page_title="506RealState",
-    page_icon="🏠",
-    layout="wide",
-)
-
-
-# ---------------------------- Variables generales --------------------------------
-# (aquí puedes ir poniendo tus variables globales si ya las tenías)
-
-# ------------------------------------------------------------------------------
-# Cargar CSV desde GitHub con cache
-# ------------------------------------------------------------------------------
-
 CSV_URL = "https://raw.githubusercontent.com/jchavesmartinez/real_state_tool/refs/heads/main/merged_contacts_listings_flat.csv"
 
 @st.cache_data(show_spinner=True)
@@ -66,17 +25,40 @@ if df_listings.empty:
     st.warning("No se pudieron cargar los datos de propiedades.")
 else:
     st.subheader("Tabla de propiedades (merged_contacts_listings_flat.csv)")
-    st.write(f"Filas: {len(df_listings)} | Columnas: {len(df_listings.columns)}")
 
-    st.dataframe(df_listings, use_container_width=True)
+    st.write(f"Total filas (sin filtrar): {len(df_listings)} | Columnas: {len(df_listings.columns)}")
 
-    # Ejemplo: podrías empezar a jugar con filtros dinámicos después
-    # filters = DynamicFilters(df_listings, filters=['Categoria', 'Localización'])
-    # filters.display_filters()
-    # filtered_df = filters.filter_df()
-    # st.dataframe(filtered_df, use_container_width=True)
+    # ----------------- Filtros dinámicos -----------------
+    # Ajusta la lista de columnas según las que tenga tu CSV
+    possible_filters = [
+        col for col in [
+            "Categoria",
+            "Localización",
+            "Precio",
+            "Recámaras",
+            "Baños",
+            "Parking",
+            "Año de construcción",
+            "contact_name"
+        ] 
+        if col in df_listings.columns
+    ]
 
-# ------------------------------------------------------------------------------
-# A partir de aquí puedes seguir con el resto de tu lógica (códigos previos)
-# por ejemplo: generación de PDFs, códigos de barras, integración con Google Drive, etc.
-# ------------------------------------------------------------------------------
+    if possible_filters:
+        st.markdown("### 🔎 Filtros dinámicos")
+        df_for_filters = df_listings.copy()
+
+        filters = DynamicFilters(
+            df_for_filters,
+            filters=possible_filters
+        )
+
+        filters.display_filters()
+
+        df_filtered = filters.filter_df()
+
+        st.write(f"Filas después de filtrar: {len(df_filtered)}")
+        st.dataframe(df_filtered, use_container_width=True)
+    else:
+        st.info("No se encontraron columnas adecuadas para filtros dinámicos, mostrando tabla completa.")
+        st.dataframe(df_listings, use_container_width=True)
