@@ -13,7 +13,6 @@ from googleapiclient.discovery import build
 from google.oauth2 import service_account
 from googleapiclient.http import MediaIoBaseUpload
 from io import BytesIO
-from barcode import EAN13
 from barcode.writer import ImageWriter
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -52,6 +51,9 @@ st.title("🏠 506RealState - Explorador de propiedades")
 if df_listings.empty:
     st.warning("No se pudieron cargar los datos de propiedades.")
 else:
+    # 👉 CONTENEDOR PARA MÉTRICAS AL INICIO
+    metrics_container = st.container()
+
     st.subheader("Tabla de propiedades")
 
     # --------- Filtros dinámicos con DynamicFilters ---------
@@ -86,7 +88,6 @@ else:
             filters=filter_cols
         )
 
-        # 🔹 Aquí los pones en 2 columnas
         filters.display_filters(
             location="columns",
             num_columns=2,
@@ -98,16 +99,6 @@ else:
         df_filtered = df_listings.copy()
 
     # --------- Filtros por columnas 0/1 (amenities, etc.) con radios ---------
-    # Detectar columnas binarias (solo 0 y 1, ignorando NaN)
-    binary_cols = []
-    for col in df_filtered.columns:
-        vals = set(df_filtered[col].dropna().unique())
-        if vals.issubset({0, 1}) and len(vals) > 0:
-            binary_cols.append(col)
-
-    # Opcional: ordenar alfabéticamente o escoger sólo algunas
-    binary_cols = sorted(binary_cols)
-
     st.markdown("### 🎛 Filtros por amenities (0/1)")
 
     binary_cols = []
@@ -116,16 +107,12 @@ else:
         if vals.issubset({0, 1}) and len(vals) > 0:
             binary_cols.append(col)
 
-    # Ordenar alfabéticamente
     binary_cols = sorted(binary_cols)
-
     amenity_choices = {}
 
     if binary_cols:
         with st.expander("Mostrar filtros de amenities (0/1)", expanded=False):
-            n_cols = 3  # número de columnas que quieres en la cuadrícula
-
-            # Recorremos las columnas binarias en bloques de n_cols
+            n_cols = 3
             for start in range(0, len(binary_cols), n_cols):
                 cols = st.columns(n_cols)
                 slice_cols = binary_cols[start:start + n_cols]
@@ -150,7 +137,32 @@ else:
             df_final = df_final[df_final[col] == 1]
         elif choice == "No":
             df_final = df_final[df_final[col] == 0]
-        # "Indiferente" → no se filtra por esa columna
 
+    # 👉 AQUÍ RELLENAS LAS MÉTRICAS DEL CONTENEDOR DE ARRIBA
+    with metrics_container:
+        st.markdown("## 📊 Resumen de resultados filtrados")
+        c1, c2, c3 = st.columns(3)
+
+        total_listings = len(df_final)
+
+        # Por si la columna 'Precio' no es numérica, la limpiamos rápido
+        if "Precio" in df_final.columns:
+            precios = pd.to_numeric(df_final["Precio"], errors="coerce")
+            precios = precios.dropna()
+        else:
+            precios = pd.Series(dtype=float)
+
+        if not precios.empty:
+            precio_prom = precios.mean()
+            precio_min = precios.min()
+            precio_max = precios.max()
+        else:
+            precio_prom = precio_min = precio_max = 0
+
+        c1.metric("Cantidad de listings", total_listings)
+        c2.metric("Precio promedio", f"${precio_prom:,.0f}")
+        c3.metric("Rango de precios", f"${precio_min:,.0f} - ${precio_max:,.0f}")
+
+    # --------- TABLA FINAL ---------
     st.write(f"Filas después de filtrar: {len(df_final)}")
     st.dataframe(df_final, use_container_width=True)
