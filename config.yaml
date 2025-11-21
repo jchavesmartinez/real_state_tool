@@ -5,10 +5,18 @@ cookie:
 
 credentials:
   usernames:
-    jose:
-      email: jose@gmail.com
-      first_name: Jose
-      last_name: Chaves
-      password: "1234"    # en texto plano para empezar
+    "jose@gmail.com":        # 👈 EL USERNAME ES EL EMAIL
+      email: "jose@gmail.com"
+      first_name: "Jose"
+      last_name: "Chaves"
+      password: "1234"       # en string
       roles:
         - admin
+
+    "admin2@gmail.com":
+      email: "admin2@gmail.com"
+      first_name: "Admin"
+      last_name: "User"
+      password: "abcd"
+      roles:
+        - viewer
