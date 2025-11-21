@@ -18,6 +18,31 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from PIL import Image
 import streamlit.components.v1 as components
+import streamlit_authenticator as stauth
+
+
+
+names = ["Jose", "Admin"]
+usernames = ["jose", "admin"]
+passwords = ["1234", "abcd"]
+
+hashed_passwords = stauth.Hasher(passwords).generate()
+
+authenticator = stauth.Authenticate(
+    names, usernames, hashed_passwords,
+    "my_app_cookie", "abcdef", cookie_expiry_days=5
+)
+
+name, auth_status, username = authenticator.login("Login", "main")
+
+if auth_status:
+    st.success(f"Bienvenido {name}")
+elif auth_status is False:
+    st.error("Usuario o contraseña incorrectos")
+elif auth_status is None:
+    st.warning("Ingrese sus credenciales")
+
+
 
 # ---------------- CONFIG PÁGINA ----------------
 st.set_page_config(
