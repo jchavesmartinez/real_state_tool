@@ -6,7 +6,7 @@ cookie:
 credentials:
   usernames:
     "jose@gmail.com":        # 👈 EL USERNAME ES EL EMAIL
-      email: "jose@gmail.com"
+      email: "jchavesm2017@gmail.com"
       first_name: "Jose"
       last_name: "Chaves"
       password: "1234"       # en string
