@@ -113,6 +113,7 @@ if auth_status:
         candidate_filters = [
             "Categoria",
             "Ubicación",
+            "Recámaras",
             "Baños",
             "Parking",
             "contact_name"
