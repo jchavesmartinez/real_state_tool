@@ -230,11 +230,6 @@ if auth_status:
         else:
             ratio_m2 = 0
 
-        # Yield (si existe precio total)
-        if precio_total is not None:
-            prom_yield = ((alquiler_usd * 12) / precio_total).mean()
-        else:
-            prom_yield = None
 
         # --- Mostrar métricas ---
         c1.metric("Cantidad de listings", total_listings)
@@ -252,9 +247,6 @@ if auth_status:
         c6.metric("Relación construcción / lote", 
                 f"{ratio_m2:.2f}" if not np.isnan(ratio_m2) else "N/A")
 
-        # Extra: Yield
-        if prom_yield is not None and not np.isnan(prom_yield):
-            st.info(f"📈 **Yield bruto anual estimado:** {prom_yield*100:.2f}%")
 
         # --------- TABLA FINAL ---------
         st.write(f"Filas después de filtrar: {len(df_final)}")
