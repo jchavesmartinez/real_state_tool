@@ -33,8 +33,8 @@ from yaml.loader import SafeLoader
 # -------------------------
 
 st.set_page_config(
-  page_title="Lilliput Inventory Management",
-  page_icon="🔬",
+  page_title="Portal Bienes Raices",
+  page_icon="🏘️",
   layout="wide",
 )
 
