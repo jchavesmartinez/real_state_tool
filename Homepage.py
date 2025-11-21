@@ -192,60 +192,60 @@ if auth_status:
                 df_final = df_final[df_final[col] == 0]
 
         # 👉 AQUÍ RELLENAS LAS MÉTRICAS DEL CONTENEDOR DE ARRIBA
-    with metrics_container:
-        st.markdown("## 📊 Resumen de resultados filtrados")
-        c1, c2, c3 = st.columns(3)
-        c4, c5, c6 = st.columns(3)
+        with metrics_container:
+            st.markdown("## 📊 Resumen de resultados filtrados")
+            c1, c2, c3 = st.columns(3)
+            c4, c5, c6 = st.columns(3)
 
-        total_listings = len(df_final)
+            total_listings = len(df_final)
 
-        # --- Limpieza de columnas numéricas ---
-        def to_num(series):
-            return pd.to_numeric(series, errors="coerce")
+            # --- Limpieza de columnas numéricas ---
+            def to_num(series):
+                return pd.to_numeric(series, errors="coerce")
 
-        m2_tot = to_num(df_final.get("M² totales"))
-        m2_cons = to_num(df_final.get("m²"))
-        alquiler_usd = to_num(df_final.get("Alquiler_USD"))
-        precio_m2_cons = to_num(df_final.get("Precio/M² de construcción_USD"))
-        precio_m2_terreno = to_num(df_final.get("Precio/M² de terreno_USD"))
-        dias_publicado = to_num(df_final.get("Dias Publicado"))
-        precio_total = to_num(df_final.get("Precio")) if "Precio" in df_final else None
+            m2_tot = to_num(df_final.get("M² totales"))
+            m2_cons = to_num(df_final.get("m²"))
+            alquiler_usd = to_num(df_final.get("Alquiler_USD"))
+            precio_m2_cons = to_num(df_final.get("Precio/M² de construcción_USD"))
+            precio_m2_terreno = to_num(df_final.get("Precio/M² de terreno_USD"))
+            dias_publicado = to_num(df_final.get("Dias Publicado"))
+            precio_total = to_num(df_final.get("Precio")) if "Precio" in df_final else None
 
-        # --- Métricas ---
-        # Precio por m² construcción
-        prom_precio_m2_cons = precio_m2_cons.mean()
+            # --- Métricas ---
+            # Precio por m² construcción
+            prom_precio_m2_cons = precio_m2_cons.mean()
 
-        # Precio por m² terreno
-        prom_precio_m2_terreno = precio_m2_terreno.mean()
+            # Precio por m² terreno
+            prom_precio_m2_terreno = precio_m2_terreno.mean()
 
-        # Alquiler promedio
-        prom_alquiler_usd = alquiler_usd.mean()
+            # Alquiler promedio
+            prom_alquiler_usd = alquiler_usd.mean()
 
-        # Tiempo promedio publicado
-        prom_dias_publicado = dias_publicado.mean()
+            # Tiempo promedio publicado
+            prom_dias_publicado = dias_publicado.mean()
 
-        # Relación m² construcción vs totales
-        if m2_tot.notna().sum() > 0:
-            ratio_m2 = (m2_cons / m2_tot).mean()
-        else:
-            ratio_m2 = 0
+            # Relación m² construcción vs totales
+            if m2_tot.notna().sum() > 0:
+                ratio_m2 = (m2_cons / m2_tot).mean()
+            else:
+                ratio_m2 = 0
 
 
-        # --- Mostrar métricas ---
-        c1.metric("Cantidad de listings", total_listings)
-        c2.metric("Precio prom. m² construcción", 
-                f"${prom_precio_m2_cons:,.0f}" if not np.isnan(prom_precio_m2_cons) else "N/A")
-        c3.metric("Precio prom. m² terreno", 
-                f"${prom_precio_m2_terreno:,.0f}" if not np.isnan(prom_precio_m2_terreno) else "N/A")
+            # --- Mostrar métricas ---
+            c1.metric("Cantidad de listings", total_listings)
+            c2.metric("Precio prom. m² construcción", 
+                    f"${prom_precio_m2_cons:,.0f}" if not np.isnan(prom_precio_m2_cons) else "N/A")
+            c3.metric("Precio prom. m² terreno", 
+                    f"${prom_precio_m2_terreno:,.0f}" if not np.isnan(prom_precio_m2_terreno) else "N/A")
 
-        c4.metric("Alquiler mensual promedio", 
-                f"${prom_alquiler_usd:,.0f}" if not np.isnan(prom_alquiler_usd) else "N/A")
+            c4.metric("Alquiler mensual promedio", 
+                    f"${prom_alquiler_usd:,.0f}" if not np.isnan(prom_alquiler_usd) else "N/A")
 
-        c5.metric("Días publicados (promedio)", 
-                f"{prom_dias_publicado:,.0f}" if not np.isnan(prom_dias_publicado) else "N/A")
+            c5.metric("Días publicados (promedio)", 
+                    f"{prom_dias_publicado:,.0f}" if not np.isnan(prom_dias_publicado) else "N/A")
 
-        c6.metric("Relación construcción / lote", 
-                f"{ratio_m2:.2f}" if not np.isnan(ratio_m2) else "N/A")
+            c6.metric("Relación construcción / lote", 
+                    f"{ratio_m2:.2f}" if not np.isnan(ratio_m2) else "N/A")
 
 
         # --------- TABLA FINAL ---------
