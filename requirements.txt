@@ -6,3 +6,4 @@ google-api-python-client
 google-auth-httplib2
 streamlit_dynamic_filters
 reportlab
+streamlit-authenticator
