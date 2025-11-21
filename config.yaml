@@ -9,13 +9,6 @@ credentials:
       email: jose@gmail.com
       first_name: Jose
       last_name: Chaves
-      password: $2b$12$O0ovf3D0xwPwdlEJP1o6dOoMYx2YSHl8Uo6tfliFFWF4ONB1WVqSO
+      password: 1234    # en texto plano para empezar
       roles:
         - admin
-    admin2:
-      email: admin2@gmail.com
-      first_name: Admin
-      last_name: User
-      password: $2b$12$ZVN8vQHbgeCcGm7HlvakxeRnyXftS7HcUtTxD8Ec6ZxIQAdK7Je3G
-      roles:
-        - viewer
