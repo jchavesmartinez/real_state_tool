@@ -225,10 +225,7 @@ if auth_status:
             prom_dias_publicado = dias_publicado.median()
 
             # Relación m² construcción vs totales
-            if m2_tot.notna().sum() > 0:
-                ratio_m2 = (m2_cons / m2_tot).median()
-            else:
-                ratio_m2 = 0
+            metros_totales = m2_tot.median()
 
 
             # --- Mostrar métricas ---
@@ -244,8 +241,8 @@ if auth_status:
             c5.metric("Días publicados (promedio)", 
                     f"{prom_dias_publicado:,.0f}" if not np.isnan(prom_dias_publicado) else "N/A")
 
-            c6.metric("Relación construcción / lote", 
-                    f"{ratio_m2:.2f}" if not np.isnan(ratio_m2) else "N/A")
+            c6.metric("M² Totales", 
+                    f"${prom_almetros_totalesquiler_usd:,.0f}" if not np.isnan(metros_totales) else "N/A")
 
 
         # --------- TABLA FINAL ---------
