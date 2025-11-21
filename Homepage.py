@@ -31,6 +31,14 @@ from yaml.loader import SafeLoader
 # -------------------------
 # Cargar archivo YAML
 # -------------------------
+
+st.set_page_config(
+  page_title="Lilliput Inventory Management",
+  page_icon="🔬",
+  layout="wide",
+)
+
+
 with open("config.yaml") as file:
     config = yaml.load(file, Loader=SafeLoader)
 
