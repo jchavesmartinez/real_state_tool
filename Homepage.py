@@ -26,8 +26,8 @@ names = ["Jose", "Admin"]
 usernames = ["jose", "admin"]
 passwords = ["1234", "abcd"]
 
-# Nueva forma correcta
-hashed_passwords = stauth.Hasher().hash(passwords)
+# ✅ Usar hash_list en lugar de hash
+hashed_passwords = stauth.Hasher.hash_list(passwords)
 
 authenticator = stauth.Authenticate(
     names,
