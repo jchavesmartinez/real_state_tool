@@ -20,30 +20,38 @@ authenticator = stauth.Authenticate(
 )
 
 # -------------------------
-# Login (VERSIÓN CORRECTA)
+# Renderizar login (NO se unpackea)
 # -------------------------
-name, auth_status, username = authenticator.login(
-    "main",
-    fields={
-        "Form name": "Login",
-        "Username": "Usuario",
-        "Password": "Contraseña",
-        "Login": "Ingresar",
-    },
-)
+try:
+    authenticator.login(
+        "main",
+        fields={
+            "Form name": "Login",
+            "Username": "Usuario",
+            "Password": "Contraseña",
+            "Login": "Ingresar",
+        },
+    )
+except Exception as e:
+    st.error(e)
 
 # -------------------------
-# Resultado del login
+# Leer estado de autenticación desde session_state
 # -------------------------
+auth_status = st.session_state.get("authentication_status")
+name = st.session_state.get("name")
+username = st.session_state.get("username")
+
 if auth_status:
+    # Ya está logueado
     st.sidebar.success(f"Bienvenido {name}")
     authenticator.logout("Cerrar sesión", "sidebar")
 
     st.title("🏠 Homepage")
-    st.write("Contenido privado de la app...")
+    st.write("Contenido privado de la app…")
 
 elif auth_status is False:
     st.error("❌ Usuario o contraseña incorrectos")
 
-elif auth_status is None:
+else:
     st.warning("Ingrese sus credenciales para continuar")
