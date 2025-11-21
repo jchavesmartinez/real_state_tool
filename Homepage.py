@@ -213,20 +213,20 @@ if auth_status:
 
             # --- Métricas ---
             # Precio por m² construcción
-            prom_precio_m2_cons = precio_m2_cons.mean()
+            prom_precio_m2_cons = precio_m2_cons.median()
 
             # Precio por m² terreno
-            prom_precio_m2_terreno = precio_m2_terreno.mean()
+            prom_precio_m2_terreno = precio_m2_terreno.median()
 
             # Alquiler promedio
-            prom_alquiler_usd = alquiler_usd.mean()
+            prom_alquiler_usd = alquiler_usd.median()
 
             # Tiempo promedio publicado
-            prom_dias_publicado = dias_publicado.mean()
+            prom_dias_publicado = dias_publicado.median()
 
             # Relación m² construcción vs totales
             if m2_tot.notna().sum() > 0:
-                ratio_m2 = (m2_cons / m2_tot).mean()
+                ratio_m2 = (m2_cons / m2_tot).median()
             else:
                 ratio_m2 = 0
 
