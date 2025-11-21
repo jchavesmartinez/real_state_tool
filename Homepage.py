@@ -26,11 +26,16 @@ names = ["Jose", "Admin"]
 usernames = ["jose", "admin"]
 passwords = ["1234", "abcd"]
 
-hashed_passwords = stauth.Hasher(passwords).generate()
+# Nueva forma correcta
+hashed_passwords = stauth.Hasher().hash(passwords)
 
 authenticator = stauth.Authenticate(
-    names, usernames, hashed_passwords,
-    "my_app_cookie", "abcdef", cookie_expiry_days=5
+    names,
+    usernames,
+    hashed_passwords,
+    "my_app_cookie",
+    "abcdef",
+    cookie_expiry_days=5
 )
 
 name, auth_status, username = authenticator.login("Login", "main")
