@@ -150,7 +150,7 @@ if auth_status:
             df_filtered = df_listings.copy()
 
         # --------- Filtros por columnas 0/1 (amenities, etc.) con radios ---------
-        st.markdown("### 🎛 Filtros por amenities (0/1)")
+        st.markdown("### Más filtros")
 
         binary_cols = []
         for col in df_filtered.columns:
