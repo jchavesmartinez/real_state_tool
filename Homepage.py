@@ -20,41 +20,48 @@ from PIL import Image
 import streamlit.components.v1 as components
 import streamlit_authenticator as stauth
 
+import yaml
+from yaml.loader import SafeLoader
 
+# -------------------------
+# Cargar archivo YAML
+# -------------------------
+with open('config.yaml') as file:
+    config = yaml.load(file, Loader=SafeLoader)
 
-names = ["Jose", "Admin"]
-usernames = ["jose", "admin"]
-passwords = ["1234", "abcd"]
-
-# ✅ Usar hash_list en lugar de hash
-hashed_passwords = stauth.Hasher.hash_list(passwords)
-
+# -------------------------
+# Crear autenticador
+# -------------------------
 authenticator = stauth.Authenticate(
-    names,
-    usernames,
-    hashed_passwords,
-    "my_app_cookie",
-    "abcdef",
-    cookie_expiry_days=5
+    config['credentials'],
+    config['cookie']['name'],
+    config['cookie']['key'],
+    config['cookie']['expiry_days']
 )
 
+# -------------------------
+# Formulario de Login
+# -------------------------
 name, auth_status, username = authenticator.login("Login", "main")
 
+# -------------------------
+# Resultado del login
+# -------------------------
 if auth_status:
-    st.success(f"Bienvenido {name}")
+    st.sidebar.success(f"Bienvenido {name}")
+
+    # Botón de logout
+    authenticator.logout("Cerrar sesión", "sidebar")
+
+    # Aquí va tu app
+    st.title("🏠 Homepage")
+    st.write("Contenido privado...")
+
 elif auth_status is False:
-    st.error("Usuario o contraseña incorrectos")
+    st.error("❌ Usuario o contraseña incorrectos")
+
 elif auth_status is None:
-    st.warning("Ingrese sus credenciales")
-
-
-
-# ---------------- CONFIG PÁGINA ----------------
-st.set_page_config(
-    page_title="506RealState",
-    page_icon="🏠",
-    layout="wide",
-)
+    st.warning("Ingrese sus credenciales para continuar")
 
 # ---------------- CARGA DE DATOS (CON CACHE) ----------------
 
