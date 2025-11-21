@@ -118,7 +118,8 @@ if auth_status:
             "Baños",
             "Parking",
             "Año de construcción",
-            "contact_name"
+            "contact_name",
+            "Ubicación"
         ]
         filter_cols = [c for c in candidate_filters if c in df_listings.columns]
 
