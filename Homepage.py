@@ -112,9 +112,6 @@ if auth_status:
         # --------- Filtros dinámicos con DynamicFilters ---------
         candidate_filters = [
             "Categoria",
-            "Recámaras",
-            "Baños",
-            "Parking",
             "contact_name"
             "province",
             "canton",
