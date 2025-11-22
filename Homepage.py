@@ -112,11 +112,12 @@ if auth_status:
         # --------- Filtros dinámicos con DynamicFilters ---------
         candidate_filters = [
             "Categoria",
-            "contact_name"
+            "contact_name",
             "province",
             "canton",
             "district",
         ]
+
         filter_cols = [c for c in candidate_filters if c in df_listings.columns]
 
         if filter_cols:
