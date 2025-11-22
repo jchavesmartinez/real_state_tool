@@ -83,7 +83,7 @@ if auth_status:
 
     CSV_URL = "https://raw.githubusercontent.com/jchavesmartinez/real_state_tool/refs/heads/main/merged_contacts_listings_flat_clean.csv"
 
-    @st.cache_data(show_spinner=True)
+    #@st.cache_data(show_spinner=True)
     def load_listings_data() -> pd.DataFrame:
         try:
             df = pd.read_csv(CSV_URL)
