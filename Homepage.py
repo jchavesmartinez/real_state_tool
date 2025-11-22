@@ -83,7 +83,7 @@ if auth_status:
 
     CSV_URL = "https://raw.githubusercontent.com/jchavesmartinez/real_state_tool/refs/heads/main/merged_contacts_listings_flat_clean.csv"
 
-    #@st.cache_data(show_spinner=True)
+    @st.cache_data(show_spinner=True)
     def load_listings_data() -> pd.DataFrame:
         try:
             df = pd.read_csv(CSV_URL)
@@ -99,7 +99,6 @@ if auth_status:
 
     # ---------------- UI PRINCIPAL ----------------
 
-
     st.title("🏠 506RealState - Explorador de propiedades")
 
     if df_listings.empty:
@@ -112,7 +111,12 @@ if auth_status:
 
         # --------- Filtros dinámicos con DynamicFilters ---------
         candidate_filters = [
+            "Categoria",
+            "contact_name",
+            "Membresia",
             "province",
+            "canton",
+            "district",
         ]
 
         filter_cols = [c for c in candidate_filters if c in df_listings.columns]
