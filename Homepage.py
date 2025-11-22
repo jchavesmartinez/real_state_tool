@@ -247,7 +247,7 @@ if auth_status:
         st.write(f"Filas después de filtrar: {len(df_final)}")
         st.dataframe(df_final, use_container_width=True)
 
-        st.write(df['province'])
+        st.write(df_final['province'])
 
 
 
