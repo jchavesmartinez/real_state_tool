@@ -149,8 +149,8 @@ if auth_status:
                 )
 
                 df_filtered = filters.filter_df()
-            else:
-                df_filtered = df_listings.copy()
+        else:
+            df_filtered = df_listings.copy()
 
         # --------- Filtros por columnas 0/1 (amenities, etc.) con radios ---------
         st.markdown("### Más filtros")
