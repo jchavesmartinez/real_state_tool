@@ -116,7 +116,7 @@ if auth_status:
             "Membresia",
             "province",
             "canton",
-            "district",
+            "district"
         ]
 
         filter_cols = [c for c in candidate_filters if c in df_listings.columns]
