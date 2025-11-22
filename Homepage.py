@@ -99,6 +99,7 @@ if auth_status:
 
     # ---------------- UI PRINCIPAL ----------------
 
+
     st.title("🏠 506RealState - Explorador de propiedades")
 
     if df_listings.empty:
