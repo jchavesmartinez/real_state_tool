@@ -142,7 +142,7 @@ if auth_status:
 
             filters.display_filters(
                 location="columns",
-                num_columns=2,
+                num_columns=3,
                 gap="small"
             )
 
