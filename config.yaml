@@ -13,10 +13,10 @@ credentials:
       roles:
         - admin
 
-    "admin2@gmail.com":
-      email: "admin2@gmail.com"
-      first_name: "Admin"
-      last_name: "User"
-      password: "abcd"
+    "capitalrentalscr@gmail.com":
+      email: "capitalrentalscr@gmail.com"
+      first_name: "Julian"
+      last_name: "Sanchez"
+      password: "itoxgay"
       roles:
         - viewer
