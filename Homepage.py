@@ -241,7 +241,7 @@ if auth_status:
                     f"{prom_dias_publicado:,.0f}" if not np.isnan(prom_dias_publicado) else "N/A")
 
             c6.metric("M² Totales", 
-                    f"${metros_totales:,.0f}" if not np.isnan(metros_totales) else "N/A")
+                    f"{metros_totales:,.0f}" if not np.isnan(metros_totales) else "N/A")
 
 
         # --------- TABLA FINAL ---------
