@@ -110,6 +110,8 @@ if auth_status:
         st.subheader("Tabla de propiedades")
 
         # --------- Filtros dinámicos con DynamicFilters ---------
+        
+        
         candidate_filters = [
             "Categoria",
             "contact_name",
@@ -123,32 +125,32 @@ if auth_status:
 
         if filter_cols:
             st.markdown("### 🔎 Filtros dinámicos")
+            with st.expander("Mostrar filtros dinamicos", expanded=False):
+                df_for_filters = df_listings.copy()
 
-            df_for_filters = df_listings.copy()
+                for col in df_for_filters.columns:
+                    if df_for_filters[col].dtype == "object":
+                        df_for_filters[col] = (
+                            df_for_filters[col]
+                            .astype(str)
+                            .replace("nan", "")
+                            .replace("None", "")
+                        )
 
-            for col in df_for_filters.columns:
-                if df_for_filters[col].dtype == "object":
-                    df_for_filters[col] = (
-                        df_for_filters[col]
-                        .astype(str)
-                        .replace("nan", "")
-                        .replace("None", "")
-                    )
+                filters = DynamicFilters(
+                    df_for_filters,
+                    filters=filter_cols
+                )
 
-            filters = DynamicFilters(
-                df_for_filters,
-                filters=filter_cols
-            )
+                filters.display_filters(
+                    location="columns",
+                    num_columns=3,
+                    gap="small"
+                )
 
-            filters.display_filters(
-                location="columns",
-                num_columns=3,
-                gap="small"
-            )
-
-            df_filtered = filters.filter_df()
-        else:
-            df_filtered = df_listings.copy()
+                df_filtered = filters.filter_df()
+            else:
+                df_filtered = df_listings.copy()
 
         # --------- Filtros por columnas 0/1 (amenities, etc.) con radios ---------
         st.markdown("### Más filtros")
